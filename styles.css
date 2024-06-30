@@ -1,0 +1,50 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+#wheel-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+#controls {
+    display: flex;
+    gap: 10px;
+}
+
+input, button {
+    padding: 10px;
+    font-size: 16px;
+}
+
+#selected-person {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#selected-image {
+    max-width: 100px;
+    max-height: 100px;
+    display: block;
+    margin: 0 auto 10px;
+}
+
+#selected-name {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#pointer {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    font-size: 50px;
+    color: red;
+}

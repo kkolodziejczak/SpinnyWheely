@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spinning Wheel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="wheel-container">
+        <canvas id="wheel" width="500" height="500" onclick="spinWheel()"></canvas>
+        <div id="pointer">&#9650;</div>
+    </div>
+    <div id="controls">
+        <input type="text" id="name-input" placeholder="Enter name">
+        <input type="file" id="image-input" accept="image/*">
+        <button onclick="addName()">Add Name</button>
+        <button onclick="removeName()">Remove Name</button>
+        <input type="file" id="music-input" accept="audio/*">
+        <button onclick="resetWeek()">Reset Week</button>
+    </div>
+    <div id="selected-person">
+        <img id="selected-image" src="" alt="Selected Person Image">
+        <p id="selected-name"></p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
