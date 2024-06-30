@@ -2,6 +2,7 @@ const canvas = document.getElementById('wheel');
 const ctx = canvas.getContext('2d');
 const names = [];
 const images = [];
+const colors = [];
 const pickedNames = new Set(); // Track names picked during the week
 let startAngle = 0;
 let spinTimeout = null;
@@ -10,6 +11,15 @@ const centerX = canvas.width / 2;
 const centerY = canvas.height / 2;
 const outsideRadius = 200;
 const textRadius = 160;
+
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
 
 function drawWheel() {
     const availableNames = names.filter(name => !pickedNames.has(name));
@@ -20,7 +30,8 @@ function drawWheel() {
 
     availableNames.forEach((name, i) => {
         const angle = startAngle + i * arc;
-        ctx.fillStyle = i % 2 === 0 ? 'lightblue' : 'lightgreen';
+        const color = colors[names.indexOf(name)] || getRandomColor(); // Get assigned color or generate one
+        ctx.fillStyle = color;
         ctx.beginPath();
         ctx.arc(centerX, centerY, outsideRadius, angle, angle + arc, false);
         ctx.arc(centerX, centerY, 0, angle + arc, angle, true);
@@ -48,9 +59,9 @@ function drawWheel() {
 function drawPointer() {
     ctx.fillStyle = 'red';
     ctx.beginPath();
-    ctx.moveTo(centerX - 10, centerY - outsideRadius - 10);
-    ctx.lineTo(centerX + 10, centerY - outsideRadius - 10);
-    ctx.lineTo(centerX, centerY - outsideRadius + 20);
+    ctx.moveTo(centerX - 10, centerY + outsideRadius + 20);
+    ctx.lineTo(centerX + 10, centerY + outsideRadius + 20);
+    ctx.lineTo(centerX, centerY + outsideRadius - 10);
     ctx.closePath();
     ctx.fill();
 }
@@ -69,13 +80,17 @@ function addName() {
                 img.src = e.target.result;
                 img.onload = function() {
                     images.push(img);
+                    colors.push(getRandomColor());
                     drawWheel();
+                    updatePersonList();
                 }
             };
             reader.readAsDataURL(file);
         } else {
             images.push(null);
+            colors.push(getRandomColor());
             drawWheel();
+            updatePersonList();
         }
         nameInput.value = '';
         imageInput.value = '';
@@ -90,10 +105,61 @@ function removeName() {
         if (index !== -1) {
             names.splice(index, 1);
             images.splice(index, 1);
+            colors.splice(index, 1);
             pickedNames.delete(name); // Also remove from picked names if present
             drawWheel();
+            updatePersonList();
         }
         nameInput.value = '';
+    }
+}
+
+function updatePersonList() {
+    const personList = document.getElementById('person-list');
+    personList.innerHTML = '';
+
+    names.forEach((name, index) => {
+        const personItem = document.createElement('div');
+        personItem.className = 'person-item';
+
+        const img = images[index] ? images[index].src : '';
+        const color = colors[index];
+
+        personItem.innerHTML = `
+            <img src="${img}" alt="${name}">
+            <input type="text" value="${name}" oninput="renamePerson(${index}, this.value)">
+            <input type="color" value="${color}" onchange="changeColor(${index}, this.value)">
+            <input type="file" onchange="changePhoto(${index}, this.files[0])">
+        `;
+
+        personList.appendChild(personItem);
+    });
+}
+
+function renamePerson(index, newName) {
+    names[index] = newName;
+    drawWheel();
+    updatePersonList();
+}
+
+function changeColor(index, newColor) {
+    colors[index] = newColor;
+    drawWheel();
+}
+
+function changePhoto(index, file) {
+    if (file) {
+        const img = new Image();
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            img.src = e.target.result;
+            img.onload = function() {
+                images[index] = img;
+                drawWheel();
+                updatePersonList();
+            }
+        };
+        reader.readAsDataURL(file);
     }
 }
 
@@ -134,7 +200,7 @@ function spinWheel() {
             const segments = availableNames.length;
             const arc = Math.PI / (segments / 2);
             const currentAngle = startAngle % (2 * Math.PI);
-            const index = Math.floor((2 * Math.PI - currentAngle) / arc) % segments;
+            const index = Math.floor((2 * Math.PI - currentAngle + Math.PI) / arc) % segments;
             const pickedName = availableNames[index];
             pickedNames.add(pickedName);
             displaySelectedPerson(pickedName);
@@ -172,3 +238,4 @@ function resetWeek() {
 
 // Initial draw
 drawWheel();
+updatePersonList();

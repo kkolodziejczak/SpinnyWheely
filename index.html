@@ -4,23 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spinning Wheel</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .person-list {
+            margin-top: 20px;
+        }
+        .person-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .person-item img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+        .person-item input {
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-    <div id="wheel-container">
-        <canvas id="wheel" width="500" height="500" onclick="spinWheel()"></canvas>
-        <div id="pointer">&#9650;</div>
+    <canvas id="wheel" width="500" height="500"></canvas>
+    <div class="controls">
+        <div>
+            <input type="text" id="name-input" placeholder="Enter name">
+            <input type="file" id="image-input">
+            <button onclick="addName()">Add</button>
+            <button onclick="removeName()">Remove</button>
+            <button onclick="resetWeek()">Reset Week</button>
+        </div>
+        <div>
+            <input type="file" id="music-input" accept="audio/*">
+            <button onclick="spinWheel()">Spin</button>
+        </div>
     </div>
-    <div id="controls">
-        <input type="text" id="name-input" placeholder="Enter name">
-        <input type="file" id="image-input" accept="image/*">
-        <button onclick="addName()">Add Name</button>
-        <button onclick="removeName()">Remove Name</button>
-        <input type="file" id="music-input" accept="audio/*">
-        <button onclick="resetWeek()">Reset Week</button>
-    </div>
-    <div id="selected-person">
-        <img id="selected-image" src="" alt="Selected Person Image">
+    <div class="person-list" id="person-list"></div>
+    <div>
+        <h3>Selected Person</h3>
+        <img id="selected-image" src="" alt="Selected Person">
         <p id="selected-name"></p>
     </div>
     <script src="script.js"></script>

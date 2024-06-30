@@ -39,12 +39,3 @@ input, button {
     font-size: 20px;
     font-weight: bold;
 }
-
-#pointer {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    font-size: 50px;
-    color: red;
-}
